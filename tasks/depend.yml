@@ -1,0 +1,16 @@
+---
+
+- name: debian - install dependencies
+  apt:
+    name={{ item }}
+    state=present
+    update_cache=true
+    cache_valid_time=3600
+  with_items:
+    - git
+    - make
+    - curl
+  when: ansible_os_family == 'Debian'
+
+- name: install go {{ golang_version }} with gimme
+  shell: 'eval "$(curl -sL https://raw.githubusercontent.com/meatballhat/gimme/master/gimme | GIMME_GO_VERSION={{ gobuild_go_version }} bash)"'

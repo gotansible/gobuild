@@ -1,0 +1,11 @@
+---
+
+- name: dependencies
+  include: depend.yml
+
+- name: build
+  include: build.yml
+
+- name: deploy
+  include: deploy.yml
+

@@ -1,0 +1,49 @@
+---
+
+- name: allow get of git private repos
+  command: git config --global url."git@github.com:".insteadOf "https://github.com/"
+  environment:
+    XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
+  when: gobuild_keyfile != ''
+
+- name: go get dependencies
+  command: "{{ item }}"
+  args:
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+  environment:
+    XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
+    GOPATH: "{{ gobuild_dir }}"
+    GOBIN: "{{ gobuild_dir }}/bin"
+    GOROOT: /usr/local/go
+  with_items:
+    - /usr/local/go/bin/go get
+    - /usr/local/go/bin/go get github.com/tools/godep
+  when: not makefile.stat.exists and gobuild_use_makefile
+
+- name: restore godep dependencies
+  command: "{{ gobuild_dir }}/bin/godep restore"
+  args:
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+  environment:
+    XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
+    GOPATH: "{{ gobuild_dir }}"
+    GOBIN: "{{ gobuild_dir }}/bin"
+    GOROOT: /usr/local/go
+
+- name: get git revision
+  command: git rev-parse --short HEAD 2>/dev/null
+  args:
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+  register: git_rev
+
+- name: go install 
+  command: /usr/local/go/bin/install {{ gobuild_build_flags }} 
+  args:
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+  environment:
+    XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
+    GOPATH: "{{ gobuild_dir }}"
+    GOBIN: "{{ gobuild_dir }}/bin"
+    GOROOT: /usr/local/go
+
+

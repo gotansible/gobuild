@@ -1,0 +1,39 @@
+---
+- name: create build directories
+  file:
+    state=directory
+    path={{ item }}
+  with_items:
+    - "{{ gobuild_dir }}"
+    - "{{ gobuild_dir }}/xdg_config_home"
+    - "{{ gobuild_dir }}/bin"
+    - "{{ gobuild_dir }}/src"
+    - "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+
+- name: checkout code to build dir
+  git:
+    repo={{ gobuild_repo_url }}
+    version={{ gobuild_repo_version }}
+    depth=1
+    update=yes
+    accept_hostkey=yes
+    dest={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}
+    force=yes
+    key_file={{ gobuild_keyfile }}
+    recursive=yes
+
+- name: check for makefile
+  stat: path={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}
+  register: makefile
+
+- name: build with go build
+  include: gobuild.yml
+  when: not (makefile.stat.exists and gobuild_use_makefile)
+
+- name: build with makefile
+  command: "make {{ gobuild_makefile_target }}"
+  args:  
+    chdir: "{{ gobuild_dir }}"
+  when: makefile.stat.exists and gobuild_use_makefile
+
+
