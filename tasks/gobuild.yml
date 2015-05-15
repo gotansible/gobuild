@@ -12,7 +12,7 @@
 
 # not clear how to find out if go get did anything
 - name: go get dependencies
-  command: "{{ gopath.stdout }}/bin/go get -t"
+  command: "{{ gopath.stdout }}/bin/go get -t -d"
   args:
     chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
   environment:
@@ -53,12 +53,6 @@
     GOROOT: "{{ gopath.stdout }}"
   when: godep_required.stat.exists
 
-#- name: get git revision
-#  shell: git rev-parse --short HEAD 2>/dev/null
-#  args:
-#    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
-#  register: git_rev
-#  changed_when: false
 
 - name: go install 
   shell: "{{ gopath.stdout }}/bin/go install {{ gobuild_build_flags }}"
@@ -69,5 +63,8 @@
     GOPATH: "{{ gobuild_dir }}"
     GOBIN: "{{ gobuild_dir }}/bin"
     GOROOT: "{{ gopath.stdout }}"
+  register: result
+
+- debug: var=result
 
 

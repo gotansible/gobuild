@@ -6,7 +6,7 @@ gobuild_repo_gopath: github.com/user/project
 # the url to the repository
 gobuild_repo_url: https://{{ gobuild_repo_gopath }}
 gobuild_repo_version: HEAD
-gobuild_keyfile: 
+gobuild_keyfile:  ''
 
 gobuild_go_version: 1.4.2
 
@@ -16,5 +16,13 @@ gobuild_makefile_target: ''
 
 gobuild_dir: /tmp/build
 gobuild_build_flags: '-race -v'
+
+gobuild_deploy_local: true
+gobuild_deploy_dest: /tmp/deploy
+
+gobuild_deploy_s3: false
+gobuild_s3_key: (AWS access key id)
+gobuild_s3_secret: (AWS secret access key)
+gobuild_bucket: (S3 bucket name)
 
 

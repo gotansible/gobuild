@@ -20,7 +20,20 @@
     dest={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}
     force=yes
     recursive=yes
+  when: "{{ gobuild_keyfile|length == 0 }}"
+
+- name: checkout code to build dir
+  git:
+    repo={{ gobuild_repo_url }}
+    version={{ gobuild_repo_version }}
+    depth=1
+    update=yes
+    accept_hostkey=yes
+    dest={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}
+    force=yes
+    recursive=yes
     key_file={{ gobuild_keyfile }}
+  when: "{{ gobuild_keyfile|length > 0 }}"
 
 - name: check for makefile
   stat: path={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}/Makefile
