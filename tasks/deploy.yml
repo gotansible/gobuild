@@ -26,4 +26,4 @@
   shell: "mv {{ gobuild_dir }}/bin/* {{ gobuild_deploy_dest}}/{{ project_name.stdout }}"
 
 - name: create git rev file
-  copy: contents="{{ git_rev.stdout }}" dest="{{ gobuild_deploy_dest}}/{{ project_name.stdout }}/_version"
+  copy: content="{{ git_rev.stdout }}" dest="{{ gobuild_deploy_dest}}/{{ project_name.stdout }}/_version"
