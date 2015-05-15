@@ -19,21 +19,21 @@
     accept_hostkey=yes
     dest={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}
     force=yes
-    key_file={{ gobuild_keyfile }}
     recursive=yes
+    key_file={{ gobuild_keyfile }}
 
 - name: check for makefile
-  stat: path={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}
+  stat: path={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}/Makefile
   register: makefile
 
 - name: build with go build
   include: gobuild.yml
-  when: not (makefile.stat.exists and gobuild_use_makefile)
+  when: not (makefile.stat.exists and gobuild_makefile_enabled)
 
 - name: build with makefile
   command: "make {{ gobuild_makefile_target }}"
   args:  
     chdir: "{{ gobuild_dir }}"
-  when: makefile.stat.exists and gobuild_use_makefile
+  when: makefile.stat.exists and gobuild_makefile_enabled
 
 

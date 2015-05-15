@@ -1,24 +1,46 @@
 ---
+- name: get gopath from gimme
+  shell: cat ~/.gimme/envs/latest.env | grep GOROOT | awk 'BEGIN { FS="=";} { print $2;}' | awk ' BEGIN { FS="\"";} { print $2;}'
+  register: gopath
+  changed_when: False
 
 - name: allow get of git private repos
-  command: git config --global url."git@github.com:".insteadOf "https://github.com/"
+  shell: git config --global url."git@github.com:".insteadOf "https://github.com/"
   environment:
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
   when: gobuild_keyfile != ''
 
+# not clear how to find out if go get did anything
 - name: go get dependencies
-  command: "{{ item }}"
+  command: "{{ gopath.stdout }}/bin/go get -t"
   args:
     chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
   environment:
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
     GOPATH: "{{ gobuild_dir }}"
     GOBIN: "{{ gobuild_dir }}/bin"
-    GOROOT: /usr/local/go
-  with_items:
-    - /usr/local/go/bin/go get
-    - /usr/local/go/bin/go get github.com/tools/godep
-  when: not makefile.stat.exists and gobuild_use_makefile
+    GOROOT: "{{ gopath.stdout }}"
+  changed_when: False
+
+- name: check for Godeps/Godeps.json
+  stat: path="{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}/Godeps/Godeps.json"
+  register: godep_required
+
+- name: is godep installed already
+  stat: path="{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}/Godeps/Godeps.json"
+  register: godep_installed
+  when: godep_required.stat.exists
+
+- name: get godep
+  command: "{{ gopath.stdout }}/bin/go get github.com/tools/godep"
+  args:
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+  environment:
+    XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
+    GOPATH: "{{ gobuild_dir }}"
+    GOBIN: "{{ gobuild_dir }}/bin"
+    GOROOT: "{{ gopath.stdout }}"
+  when: godep_required.stat.exists and not godep_installed.stat.exists
 
 - name: restore godep dependencies
   command: "{{ gobuild_dir }}/bin/godep restore"
@@ -28,22 +50,24 @@
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
     GOPATH: "{{ gobuild_dir }}"
     GOBIN: "{{ gobuild_dir }}/bin"
-    GOROOT: /usr/local/go
+    GOROOT: "{{ gopath.stdout }}"
+  when: godep_required.stat.exists
 
-- name: get git revision
-  command: git rev-parse --short HEAD 2>/dev/null
-  args:
-    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
-  register: git_rev
+#- name: get git revision
+#  shell: git rev-parse --short HEAD 2>/dev/null
+#  args:
+#    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+#  register: git_rev
+#  changed_when: false
 
 - name: go install 
-  command: /usr/local/go/bin/install {{ gobuild_build_flags }} 
+  shell: "{{ gopath.stdout }}/bin/go install {{ gobuild_build_flags }}"
   args:
     chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
   environment:
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
     GOPATH: "{{ gobuild_dir }}"
     GOBIN: "{{ gobuild_dir }}/bin"
-    GOROOT: /usr/local/go
+    GOROOT: "{{ gopath.stdout }}"
 
 

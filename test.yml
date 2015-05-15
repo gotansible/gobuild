@@ -1,5 +1,7 @@
 ---
 - hosts: all
   sudo: true
+  vars:
+    gobuild_repo_gopath: github.com/gotgo/lg
   roles:
     - role: gobuild

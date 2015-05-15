@@ -1,14 +1,17 @@
 ---
 
+# this is the path on disk
 gobuild_repo_gopath: github.com/user/project
-gobuild_repo_url: ssh://git@{{ gobuild_repo_gopath }}
+
+# the url to the repository
+gobuild_repo_url: https://{{ gobuild_repo_gopath }}
 gobuild_repo_version: HEAD
-gobuild_keyfile: ''
+gobuild_keyfile: 
 
 gobuild_go_version: 1.4.2
 
 # use makefile if present
-gobuild_makefile: true
+gobuild_makefile_enabled: true
 gobuild_makefile_target: ''
 
 gobuild_dir: /tmp/build

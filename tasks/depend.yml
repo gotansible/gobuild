@@ -12,5 +12,10 @@
     - curl
   when: ansible_os_family == 'Debian'
 
+- name: is go installed
+  stat: path=~/.gimme/envs/latest.env
+  register: golang
+
 - name: install go {{ golang_version }} with gimme
   shell: 'eval "$(curl -sL https://raw.githubusercontent.com/meatballhat/gimme/master/gimme | GIMME_GO_VERSION={{ gobuild_go_version }} bash)"'
+  when: not golang.stat.exists
