@@ -11,7 +11,7 @@
   register: git_rev
   changed_when: false
 
-- name: get project naem
+- name: get project name
   shell: printf '%s\n' "${PWD##*/}"
   args:
     chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
@@ -25,5 +25,25 @@
 - name: deploy local
   shell: "mv {{ gobuild_dir }}/bin/* {{ gobuild_deploy_dest}}/{{ project_name.stdout }}"
 
+- name: get git revision
+  shell: git rev-parse --short HEAD 2>/dev/null
+  args:
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+  register: git_rev
+  changed_when: false
+
 - name: create git rev file
-  copy: content="{{ git_rev.stdout }}" dest="{{ gobuild_deploy_dest}}/{{ project_name.stdout }}/_version"
+  copy: content="{{ git_rev.stdout }}" dest="{{ gobuild_deploy_dest}}/{{ project_name.stdout }}/_githash"
+
+- name: get version number
+  shell: cat VERSION
+  args:
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+  register: version
+  failed_when: false
+
+- name: create version file
+  copy: content="{{ version.stdout }}" dest="{{ gobuild_deploy_dest}}/{{ project_name.stdout }}/_version"
+  when: version.rc == 0
+
+
