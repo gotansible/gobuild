@@ -9,6 +9,6 @@
       gobuild_commands:
         - make updatedeps
         - make dev
-#    - role: gobuild
-#      gobuild_project_path: github.com/gotansible/gobuild
+    - role: gobuild
+      gobuild_project_path: github.com/gotansible/gobuild
 
