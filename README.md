@@ -2,6 +2,7 @@ gobuild
 =========
 
 [![Build Status](https://travis-ci.org/gotansible/gobuild.svg?branch=0.1.1)](https://travis-ci.org/gotansible/gobuild)
+[![Ansible Galaxy](http://img.shields.io/badge/galaxy-gotansible.gobuild-blue.svg?style=flat)](https://galaxy.ansible.com/list#/roles/3845)
 
 An ansible role that does builds of golang projects.
 

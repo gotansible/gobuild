@@ -3,12 +3,12 @@ dependencies: []
 
 galaxy_info:
   author: Franklin Wise
-  description: 
+  description: Builds go lang projects
   company: 
   license: MIT
   min_ansible_version: 1.8
-  #platforms:
-  #- name: Ubuntu
+  platforms:
+  - name: Ubuntu
   #  versions:
   #  - all
   #  - lucid
@@ -20,7 +20,7 @@ galaxy_info:
   #  - raring
   #  - saucy
   #  - trusty
-  #- name: Debian
+  - name: Debian
   #  versions:
   #  - all
   #  - etch
@@ -92,7 +92,7 @@ galaxy_info:
   #  - 11SP2
   #  - 11SP3
   #
-  #categories:
+  categories:
   #- cloud
   #- cloud:ec2
   #- cloud:gce
@@ -101,10 +101,10 @@ galaxy_info:
   #- database
   #- database:nosql
   #- database:sql
-  #- development
+  - development
   #- monitoring
   #- networking
-  #- packaging
+  - packaging
   #- system
   #- web
 
