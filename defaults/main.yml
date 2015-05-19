@@ -5,14 +5,15 @@ gobuild_project_path: github.com/user/project
 
 # the url to the repository
 gobuild_repo_url: https://{{ gobuild_project_path }}
+
+#  This can be the full 40-character SHA-1 hash, the literal string HEAD, a branch name, or a tag name.
 gobuild_repo_version: HEAD
 gobuild_keyfile:  ''
 
 gobuild_go_version: 1.4.2
 
-# use makefile if present
-gobuild_makefile_enabled: true
-gobuild_makefile_target: ''
+gobuild_commands: []
+
 
 gobuild_dir: /tmp/build
 gobuild_build_flags: '-race -v'

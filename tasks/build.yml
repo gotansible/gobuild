@@ -35,18 +35,28 @@
     key_file={{ gobuild_keyfile }}
   when: "{{ gobuild_keyfile|length > 0 }}"
 
-- name: check for makefile
-  stat: path={{ gobuild_dir }}/src/{{ gobuild_project_path }}/Makefile
-  register: makefile
+- name: get gopath from gimme
+  shell: cat ~/.gimme/envs/latest.env | grep GOROOT | awk 'BEGIN { FS="=";} { print $2;}' | awk ' BEGIN { FS="\"";} { print $2;}'
+  register: gimme_gopath
+  changed_when: False
 
-- name: build with makefile
-  command: "make {{ gobuild_makefile_target }}"
+- set_fact:
+    goroot: "{{gimme_gopath.stdout}}"
+
+- name: build with commands
+  command: "{{ item }}"
   args:  
-    chdir: "{{ gobuild_dir }}"
-  when: makefile.stat.exists and gobuild_makefile_enabled
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}/"
+  environment:
+    GOPATH: "{{ gobuild_dir }}"
+    GOBIN: "{{ gobuild_dir }}/bin"
+    GOROOT: "{{ goroot }}"
+    PATH: "{{ ansible_env.PATH }}:{{ goroot }}/bin:{{ gobuild_dir }}/bin"
+  with_items: gobuild_commands
+  when: gobuild_commands|length > 0
 
 - name: build with go build
   include: gobuild.yml
-  when: not (makefile.stat.exists and gobuild_makefile_enabled)
+  when: gobuild_commands|length == 0
 
 

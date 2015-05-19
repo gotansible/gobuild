@@ -1,6 +1,6 @@
 ---
 
-- name: debian - install dependencies
+- name: depend - debian - install dependencies
   apt:
     name={{ item }}
     state=present
@@ -10,12 +10,13 @@
     - git
     - make
     - curl
+    - mercurial
   when: ansible_os_family == 'Debian'
 
-- name: is go installed
+- name: depend - is go installed
   stat: path=~/.gimme/envs/latest.env
   register: golang
 
-- name: install go {{ golang_version }} with gimme
+- name: depend - install go with gimme
   shell: 'eval "$(curl -sL https://raw.githubusercontent.com/meatballhat/gimme/master/gimme | GIMME_GO_VERSION={{ gobuild_go_version }} bash)"'
   when: not golang.stat.exists
