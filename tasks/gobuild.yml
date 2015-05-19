@@ -14,7 +14,7 @@
 - name: go get dependencies
   command: "{{ gopath.stdout }}/bin/go get -t -d"
   args:
-    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
   environment:
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
     GOPATH: "{{ gobuild_dir }}"
@@ -23,18 +23,18 @@
   changed_when: False
 
 - name: check for Godeps/Godeps.json
-  stat: path="{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}/Godeps/Godeps.json"
+  stat: path="{{ gobuild_dir }}/src/{{ gobuild_project_path }}/Godeps/Godeps.json"
   register: godep_required
 
 - name: is godep installed already
-  stat: path="{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}/Godeps/Godeps.json"
+  stat: path="{{ gobuild_dir }}/src/{{ gobuild_project_path }}/Godeps/Godeps.json"
   register: godep_installed
   when: godep_required.stat.exists
 
 - name: get godep
   command: "{{ gopath.stdout }}/bin/go get github.com/tools/godep"
   args:
-    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
   environment:
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
     GOPATH: "{{ gobuild_dir }}"
@@ -45,7 +45,7 @@
 - name: restore godep dependencies
   command: "{{ gobuild_dir }}/bin/godep restore"
   args:
-    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
   environment:
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
     GOPATH: "{{ gobuild_dir }}"
@@ -57,14 +57,12 @@
 - name: go install 
   shell: "{{ gopath.stdout }}/bin/go install {{ gobuild_build_flags }}"
   args:
-    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
   environment:
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
     GOPATH: "{{ gobuild_dir }}"
     GOBIN: "{{ gobuild_dir }}/bin"
     GOROOT: "{{ gopath.stdout }}"
   register: result
-
-- debug: var=result
 
 

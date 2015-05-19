@@ -1,10 +1,10 @@
 ---
 
 # this is the path on disk
-gobuild_repo_gopath: github.com/user/project
+gobuild_project_path: github.com/user/project
 
 # the url to the repository
-gobuild_repo_url: https://{{ gobuild_repo_gopath }}
+gobuild_repo_url: https://{{ gobuild_project_path }}
 gobuild_repo_version: HEAD
 gobuild_keyfile:  ''
 

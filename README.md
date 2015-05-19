@@ -1,31 +1,71 @@
-{{ newrole_name }}
+gobuild
 =========
 
-A brief description of {{ newrole_name }} goes here.
+An ansible role that does builds of golang projects.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* Ubuntu / Debian
+* CentOS / RedHat
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```yaml
+# path on disk
+gobuild_project_path: github.com/user/project
+
+# the url to the repository
+gobuild_repo_url: https://{{ gobuild_project_path }}
+
+# could be a hash or other marker of a rev
+gobuild_repo_version: HEAD
+
+# for private repositories
+gobuild_keyfile:  ''
+
+gobuild_go_version: 1.4.2
+
+# use makefile if present
+gobuild_makefile_enabled: true
+
+# i.e.: make {target}
+gobuild_makefile_target: ''
+
+# any build flags for go
+gobuild_build_flags: '-race -v'
+# where to do the building
+gobuild_dir: /tmp/build
+
+# deploy to the build machine's local filesystem
+gobuild_deploy_local: true
+gobuild_deploy_dest: /tmp/deploy
+
+# deploy to s3
+gobuild_deploy_s3: false
+gobuild_s3_key: (AWS access key id)
+gobuild_s3_secret: (AWS secret access key)
+gobuild_bucket: (S3 bucket name)
+
+```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+* none
 
 Example Playbook
 ----------------
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- hosts: servers
+  roles:
+    - role: gotansible.gobuild
+	  gobuild_project_path: github.com/youruser/yourproject
+```
 
 License
 -------
@@ -35,6 +75,5 @@ MIT
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
-
+Created by Franklin Wise in Santa Monica, CA.
 

@@ -4,45 +4,47 @@
 #
 #local
 
-- name: get git revision
+- name: deploy - get git revision
   shell: git rev-parse --short HEAD 2>/dev/null
   args:
-    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
   register: git_rev
   changed_when: false
 
-- name: get project name
+- name: deploy - get project name
   shell: printf '%s\n' "${PWD##*/}"
   args:
-    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
   register: project_name
+  changed_when: false
 
-- name: create local deploy target
+- name: deploy - create local deploy target
   file: 
     path={{ gobuild_deploy_dest}}/{{ project_name.stdout }}
     state=directory
 
-- name: deploy local
-  shell: "mv {{ gobuild_dir }}/bin/* {{ gobuild_deploy_dest}}/{{ project_name.stdout }}"
+- name: deploy - deploy local
+  shell: "cp {{ gobuild_dir }}/bin/* {{ gobuild_deploy_dest}}/{{ project_name.stdout }}"
 
-- name: get git revision
+- name: deploy - get git revision
   shell: git rev-parse --short HEAD 2>/dev/null
   args:
-    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
   register: git_rev
   changed_when: false
 
-- name: create git rev file
+- name: deploy - create git rev file
   copy: content="{{ git_rev.stdout }}" dest="{{ gobuild_deploy_dest}}/{{ project_name.stdout }}/_githash"
 
-- name: get version number
+- name: deploy - get version number
   shell: cat VERSION
   args:
-    chdir: "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+    chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
   register: version
+  changed_when: false
   failed_when: false
 
-- name: create version file
+- name: deploy - create version file
   copy: content="{{ version.stdout }}" dest="{{ gobuild_deploy_dest}}/{{ project_name.stdout }}/_version"
   when: version.rc == 0
 

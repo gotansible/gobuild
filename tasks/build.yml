@@ -8,7 +8,7 @@
     - "{{ gobuild_dir }}/xdg_config_home"
     - "{{ gobuild_dir }}/bin"
     - "{{ gobuild_dir }}/src"
-    - "{{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}"
+    - "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
 
 - name: checkout code to build dir
   git:
@@ -17,7 +17,7 @@
     depth=1
     update=yes
     accept_hostkey=yes
-    dest={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}
+    dest={{ gobuild_dir }}/src/{{ gobuild_project_path }}
     force=yes
     recursive=yes
   when: "{{ gobuild_keyfile|length == 0 }}"
@@ -29,24 +29,24 @@
     depth=1
     update=yes
     accept_hostkey=yes
-    dest={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}
+    dest={{ gobuild_dir }}/src/{{ gobuild_project_path }}
     force=yes
     recursive=yes
     key_file={{ gobuild_keyfile }}
   when: "{{ gobuild_keyfile|length > 0 }}"
 
 - name: check for makefile
-  stat: path={{ gobuild_dir }}/src/{{ gobuild_repo_gopath }}/Makefile
+  stat: path={{ gobuild_dir }}/src/{{ gobuild_project_path }}/Makefile
   register: makefile
-
-- name: build with go build
-  include: gobuild.yml
-  when: not (makefile.stat.exists and gobuild_makefile_enabled)
 
 - name: build with makefile
   command: "make {{ gobuild_makefile_target }}"
   args:  
     chdir: "{{ gobuild_dir }}"
   when: makefile.stat.exists and gobuild_makefile_enabled
+
+- name: build with go build
+  include: gobuild.yml
+  when: not (makefile.stat.exists and gobuild_makefile_enabled)
 
 

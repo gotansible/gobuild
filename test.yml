@@ -1,7 +1,6 @@
 ---
 - hosts: all
   sudo: true
-  vars:
-    gobuild_repo_gopath: github.com/gotansible/gobuild
   roles:
     - role: gobuild
+      gobuild_project_path: github.com/gotansible/gobuild

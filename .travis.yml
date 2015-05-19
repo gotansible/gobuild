@@ -6,10 +6,10 @@ before_install:
   - sudo apt-get install -qq python-apt python-pycurl
 install:
   - pip install ansible==1.9.1
-  - ansible-galaxy install gotansible.runit
 script:
   - echo localhost > inventory
   - ansible-playbook -i inventory test.yml --syntax-check
+  - ansible-playbook -i inventory test.yml --connection=local --sudo -e "key=value"
   - ansible-playbook -i inventory test.yml --connection=local --sudo -e "key=value"
     #   - >
     #     ansible-playbook -i inventory test.yml --connection=local --sudo -e "key-value"
