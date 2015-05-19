@@ -1,6 +1,8 @@
 gobuild
 =========
 
+[![Build Status](https://travis-ci.org/gotansible/gobuild.svg?branch=0.1.1)](https://travis-ci.org/gotansible/gobuild)
+
 An ansible role that does builds of golang projects.
 
 Requirements
