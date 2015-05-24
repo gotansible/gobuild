@@ -4,7 +4,7 @@ gobuild
 [![Build Status](https://travis-ci.org/gotansible/gobuild.svg?branch=0.1.1)](https://travis-ci.org/gotansible/gobuild)
 [![Ansible Galaxy](http://img.shields.io/badge/galaxy-gotansible.gobuild-blue.svg?style=flat)](https://galaxy.ansible.com/list#/roles/3845)
 
-An ansible role that does builds of golang projects.
+An ansible role that does builds of golang projects. Uses [gimme](https://github.com/meatballhat/gimme).
 
 Requirements
 ------------
@@ -32,6 +32,12 @@ gobuild_go_version: 1.4.2
 
 # use makefile if present
 gobuild_makefile_enabled: true
+
+# if commands are specified, then only these commands will be used to build
+gobuild_commands: []
+
+# if true, will limit gimme to the root user
+gobuild_strict: false
 
 # i.e.: make {target}
 gobuild_makefile_target: ''
@@ -69,6 +75,20 @@ Including an example of how to use your role (for instance, with variables passe
     - role: gotansible.gobuild
 	  gobuild_project_path: github.com/youruser/yourproject
 ```
+
+
+or with your own commands
+
+```yaml
+- hosts: servers
+  roles:
+    - role: gotansible.gobuild
+	  gobuild_project_path: github.com/youruser/yourproject
+	  gobuild_commands:
+		- make updatedeps
+		- make
+```
+
 
 License
 -------
