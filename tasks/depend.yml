@@ -24,7 +24,7 @@
 - name: depend - get gimme global
   get_url:
     url: "https://raw.githubusercontent.com/meatballhat/gimme/master/gimme"
-    dest: /bin/gimme
+    dest: /usr/local/bin
     mode: 755
   when: not gobuild_strict
 
@@ -38,10 +38,10 @@
   changed_when: False
  
 - set_fact:
-    goroot: "{{gimme_gopath.stdout}}"
+    gobuild_goroot: "{{gimme_gopath.stdout}}"
 
-- name: depend - setup profile.d env
-  template:
-    src=go.sh.j2
-    dest=/etc/profile.d/go.sh
-  when: not gobuild_strict
+#- name: depend - setup profile.d env
+#  template:
+#    src=go.sh.j2
+#    dest=/etc/profile.d/go.sh
+#  when: not gobuild_strict

@@ -50,8 +50,8 @@
   environment:
     GOPATH: "{{ gobuild_dir }}"
     GOBIN: "{{ gobuild_dir }}/bin"
-    GOROOT: "{{ goroot }}"
-    PATH: "{{ ansible_env.PATH }}:{{ goroot }}/bin:{{ gobuild_dir }}/bin"
+    GOROOT: "{{ gobuild_goroot }}"
+    PATH: "{{ ansible_env.PATH }}:{{ gobuild_goroot }}/bin:{{ gobuild_dir }}/bin"
   with_items: gobuild_commands
   when: gobuild_commands|length > 0
 
