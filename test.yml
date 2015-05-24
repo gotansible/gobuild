@@ -5,7 +5,7 @@
     #- role: gotansible.golang
     - role: gobuild
       gobuild_project_path: github.com/hashicorp/terraform
-      gobuild_repo_version: v0.5.1
+      #gobuild_repo_version: v0.5.1
       gobuild_commands:
         - make updatedeps
         - make dev
