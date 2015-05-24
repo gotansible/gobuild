@@ -19,4 +19,29 @@
 
 - name: depend - install go with gimme
   shell: 'eval "$(curl -sL https://raw.githubusercontent.com/meatballhat/gimme/master/gimme | GIMME_GO_VERSION={{ gobuild_go_version }} bash)"'
-  when: not golang.stat.exists
+  when: not golang.stat.exists and gobuild_strict
+
+- name: depend - get gimme global
+  get_url:
+    url: "https://raw.githubusercontent.com/meatballhat/gimme/master/gimme"
+    dest: /bin/gimme
+    mode: 755
+  when: not gobuild_strict
+
+- name: depend - install go with gimme
+  shell: "gimme {{ gobuild_go_version }}"
+  when: not gobuild_strict
+
+- name: get gopath from gimme
+  shell: cat ~/.gimme/envs/latest.env | grep GOROOT | awk 'BEGIN { FS="=";} { print $2;}' | awk ' BEGIN { FS="\"";} { print $2;}'
+  register: gimme_gopath
+  changed_when: False
+ 
+- set_fact:
+    goroot: "{{gimme_gopath.stdout}}"
+
+- name: depend - setup profile.d env
+  template:
+    src=go.sh.j2
+    dest=/etc/profile.d/go.sh
+  when: not gobuild_strict

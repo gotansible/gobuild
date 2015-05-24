@@ -35,13 +35,13 @@
     key_file={{ gobuild_keyfile }}
   when: "{{ gobuild_keyfile|length > 0 }}"
 
-- name: get gopath from gimme
-  shell: cat ~/.gimme/envs/latest.env | grep GOROOT | awk 'BEGIN { FS="=";} { print $2;}' | awk ' BEGIN { FS="\"";} { print $2;}'
-  register: gimme_gopath
-  changed_when: False
-
-- set_fact:
-    goroot: "{{gimme_gopath.stdout}}"
+#- name: get gopath from gimme
+#  shell: cat ~/.gimme/envs/latest.env | grep GOROOT | awk 'BEGIN { FS="=";} { print $2;}' | awk ' BEGIN { FS="\"";} { print $2;}'
+#  register: gimme_gopath
+#  changed_when: False
+#
+#- set_fact:
+#    goroot: "{{gimme_gopath.stdout}}"
 
 - name: build with commands
   command: "{{ item }}"
