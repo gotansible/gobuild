@@ -10,7 +10,7 @@
     - "{{ gobuild_dir }}/src"
     - "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
 
-- name: checkout code to build dir
+- name: checkout code to build dir - no key
   git:
     repo={{ gobuild_repo_url }}
     version={{ gobuild_repo_version }}
@@ -22,7 +22,7 @@
     recursive=yes
   when: "{{ gobuild_keyfile|length == 0 }}"
 
-- name: checkout code to build dir
+- name: checkout code to build dir - with key
   git:
     repo={{ gobuild_repo_url }}
     version={{ gobuild_repo_version }}
