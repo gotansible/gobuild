@@ -40,8 +40,9 @@
 - set_fact:
     gobuild_goroot: "{{gimme_gopath.stdout}}"
 
-#- name: depend - setup profile.d env
-#  template:
-#    src=go.sh.j2
-#    dest=/etc/profile.d/go.sh
-#  when: not gobuild_strict
+- name: copy local keyfile
+  copy:
+    src={{ gobuild_keyfile_local }}
+    dest={{ gobuild_keyfile }}
+    mode=0600
+  when: gobuild_keyfile_local
