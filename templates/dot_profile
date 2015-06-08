@@ -8,6 +8,8 @@ fi
 
 eval `ssh-agent -s`
 
+ssh-add
+
 {% if gobuild_key_global -%}
 ssh-add {{ gobuild_keyfile }}
 {%- endif %}
