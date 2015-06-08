@@ -16,7 +16,7 @@ gobuild_go_version: 1.4.2
 
 gobuild_commands: []
 
-gobuild_global_key: false
+gobuild_key_global: false
 gobuild_dir: /tmp/build
 gobuild_build_flags: '-race -v'
 

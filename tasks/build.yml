@@ -18,7 +18,7 @@
 
 - name: add global checkout key
   copy:
-    src={{ gobuild_keyfile }}
+    src={{ gobuild_keyfile_local }}
     dest=~/.ssh/id_rsa
     mode=0600
     backup=yes
