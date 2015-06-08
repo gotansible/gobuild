@@ -17,14 +17,25 @@
   when: gobuild_keyfile != ''
 
 # this is for the case where there are multiple private go repositories
-# not thrilled about this solution, perhaps ssh-agent and ssh-add instead?
-- name: add global checkout key
-  copy:
-    src={{ gobuild_keyfile_local }}
-    dest=~/.ssh/id_rsa
-    mode=0600
-    backup=yes
+- name: setup ssh-agent
+  template:
+    src=dot_profile
+    dest=~/.profile
+  register: profile
   when: gobuild_keyfile and gobuild_key_global
+
+- name: restart machine
+  command: shutdown -r now "Ansible role basics triggered"
+  async: 0
+  poll: 0
+  ignore_errors: true
+  when: profile.changed
+
+- name: waiting for server to come back
+  local_action: wait_for host={{ inventory_hostname }}
+                state=started
+  sudo: false
+  when: profile.changed
 
 - name: checkout code to build dir - no key
   git:

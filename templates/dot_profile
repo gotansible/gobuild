@@ -1,0 +1,15 @@
+# ~/.profile: executed by Bourne-compatible login shells.
+
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+
+eval `ssh-agent -s`
+
+{% if gobuild_key_global -%}
+ssh-add {{ gobuild_keyfile }}
+{%- endif %}
+
+mesg n
