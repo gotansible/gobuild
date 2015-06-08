@@ -16,6 +16,14 @@
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
   when: gobuild_keyfile != ''
 
+- name: add global checkout key
+  copy:
+    src={{ gobuild_keyfile }}
+    dest=~/.ssh/id_rsa
+    mode=0600
+    backup=yes
+  when: gobuild_keyfile and gobuild_global_key
+
 - name: checkout code to build dir - no key
   git:
     repo={{ gobuild_repo_url }}
