@@ -40,7 +40,7 @@
 - set_fact:
     gobuild_goroot: "{{gimme_gopath.stdout}}"
 
-- name: create keyfile destionation
+- name: create keyfile destination
   file:
     state=directory
     path={{ gobuild_keyfile|dirname }}
