@@ -16,18 +16,18 @@
     XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
   when: gobuild_keyfile != ''
 
-# this is for the case where there are multiple private go repositories
-- name: setup ssh-agent
-  template:
-    src=dot_profile
-    dest=~/.profile
-  register: profile
-  when: gobuild_keyfile and gobuild_key_global
-
-# when re-using ssh connections this will work, otherwise, a new ssh
-# connection does what we want
-- name: source profile
-  shell: . ~/.profile
+## this is for the case where there are multiple private go repositories
+#- name: setup ssh-agent
+#  template:
+#    src=dot_profile
+#    dest=~/.profile
+#  register: profile
+#  when: gobuild_keyfile and gobuild_key_global
+#
+## when re-using ssh connections this will work, otherwise, a new ssh
+## connection does what we want
+#- name: source profile
+#  shell: . ~/.profile
 
 #- name: restart machine
 #  command: shutdown -r now "Ansible role basics triggered"
