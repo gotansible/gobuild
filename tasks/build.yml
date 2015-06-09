@@ -76,7 +76,7 @@
 #    goroot: "{{gimme_gopath.stdout}}"
 
 - name: build with commands
-  command: "{{ item }}"
+  shell: "eval `ssh-agent -s`;ssh-add {{ gobuild_keyfile }}; {{ item }}"
   args:  
     chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}/"
   environment:
