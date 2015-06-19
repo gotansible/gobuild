@@ -44,11 +44,12 @@
   file:
     state=directory
     path={{ gobuild_keyfile|dirname }}
-  when: gobuild_keyfile_local
+  when: "{{ gobuild_keyfile|length > 0 }}"
 
 - name: copy local keyfile
   copy:
     src={{ gobuild_keyfile_local }}
     dest={{ gobuild_keyfile }}
     mode=0600
-  when: gobuild_keyfile_local
+  when: "{{ gobuild_keyfile|length > 0 }}"
+
