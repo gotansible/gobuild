@@ -5,42 +5,10 @@
     path={{ item }}
   with_items:
     - "{{ gobuild_dir }}"
-    - "{{ gobuild_dir }}/xdg_config_home"
+    - "{{ gobuild_gitconfig | dirname }}"
     - "{{ gobuild_dir }}/bin"
     - "{{ gobuild_dir }}/src"
     - "{{ gobuild_dir }}/src/{{ gobuild_project_path }}"
-
-- name: allow get of git private repos
-  shell: git config --global url."git@github.com:".insteadOf "https://github.com/"
-  environment:
-    XDG_CONFIG_HOME: "{{ gobuild_dir }}/xdg_config_home"
-  when: gobuild_keyfile != ''
-
-## this is for the case where there are multiple private go repositories
-#- name: setup ssh-agent
-#  template:
-#    src=dot_profile
-#    dest=~/.profile
-#  register: profile
-#  when: gobuild_keyfile and gobuild_key_global
-#
-## when re-using ssh connections this will work, otherwise, a new ssh
-## connection does what we want
-#- name: source profile
-#  shell: . ~/.profile
-
-#- name: restart machine
-#  command: shutdown -r now "Ansible role basics triggered"
-#  async: 0
-#  poll: 0
-#  ignore_errors: true
-#  when: profile.changed
-#
-#- name: waiting for server to come back
-#  local_action: wait_for host={{ inventory_hostname }}
-#                state=started
-#  sudo: false
-#  when: profile.changed
 
 - name: checkout code to build dir - no key
   git:
@@ -66,14 +34,6 @@
     recursive=yes
     key_file={{ gobuild_keyfile }}
   when: "{{ gobuild_keyfile|length > 0 }}"
-
-#- name: get gopath from gimme
-#  shell: cat ~/.gimme/envs/latest.env | grep GOROOT | awk 'BEGIN { FS="=";} { print $2;}' | awk ' BEGIN { FS="\"";} { print $2;}'
-#  register: gimme_gopath
-#  changed_when: False
-#
-#- set_fact:
-#    goroot: "{{gimme_gopath.stdout}}"
 
 - name: build with commands
   shell: "eval `ssh-agent -s`;ssh-add {{ gobuild_keyfile }}; {{ item }}"

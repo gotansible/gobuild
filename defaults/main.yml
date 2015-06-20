@@ -28,4 +28,7 @@ gobuild_s3_key: (AWS access key id)
 gobuild_s3_secret: (AWS secret access key)
 gobuild_bucket: (S3 bucket name)
 
+gobuild_gitconfig: "{{ gobuild_dir }}/gitconfig"
+
+
 
