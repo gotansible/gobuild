@@ -15,6 +15,8 @@
 
 - name: allow get of git private repos
   shell: git config -f {{ gobuild_gitconfig }} url."ssh://git@github.com:".insteadOf "https://github.com/"
+  environment:
+    GIT_CONFIG: "{{ gobuild_gitconfig }}"
   when: gobuild_keyfile != ''
 
 # not clear how to find out if go get did anything
