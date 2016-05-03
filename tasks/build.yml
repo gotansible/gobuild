@@ -36,7 +36,7 @@
   when: "{{ gobuild_keyfile|length > 0 }}"
 
 - name: build with commands
-  shell: "eval `ssh-agent -s`;ssh-add {{ gobuild_keyfile }}; {{ item }}"
+  shell: "eval `ssh-agent -s`;ssh-add {{ gobuild_keyfile }}; {{ item }}; eval `ssh-agent -k`"
   args:  
     chdir: "{{ gobuild_dir }}/src/{{ gobuild_project_path }}/"
   environment:
